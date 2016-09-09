@@ -149,9 +149,9 @@ Available variables:
  - `CASSANDRA_TRANSPORT_PORT`: Inter-node cluster communication port. Default: **7000**
  - `CASSANDRA_SSL_TRANSPORT_PORT`: SSL inter-node cluster communication port. Default: **7001**
  - `CASSANDRA_JMX_PORT`: JMX connections port. Default: **7199**
- - `CASSANDRA_CQL_PORT`: Client port. Default: **9042**.
+ - `CASSANDRA_CQL_CLIENT_PORT`: Client port. Default: **9042**.
  - `CASSANDRA_RPC_PORT`: Thrift RPC service connection port. Default: **9160**
- - `CASSANDRA_USER`: Cassandra user name. Defaults: **cassandra**
+ - `CASSANDRA_USERNAME`: Cassandra user name. Defaults: **cassandra**
  - `CASSANDRA_PASSWORD`: Cassandra user password. Default: **cassandra**
  - `CASSANDRA_HOST`: Hostname used to configure Cassandra. It can be either an IP or a domain. If left empty, it will be resolved to the machine IP.
  - `CASSANDRA_CLUSTER_NAME`: Cluster name to configure Cassandra.. Defaults: **My Cluster**
