@@ -186,6 +186,9 @@ cassandra:
  - `CASSANDRA_TRANSPORT_PORT_NUMBER`: Inter-node cluster communication port. Default: **7000**
  - `CASSANDRA_JMX_PORT_NUMBER`: JMX connections port. Default: **7199**
  - `CASSANDRA_CQL_PORT_NUMBER`: Client port. Default: **9042**.
+ - `CASSANDRA_ALLOW_EMPTY_PASSWORD`: Allow login without password (not recommended for production use). Default: **false**
+ - `CASSANDRA_AUTHORIZER`: Cassandra authorizer. Default: **PasswordAuthorizer**
+ - `CASSANDRA_AUTHENTICATOR`: Cassandra authenticator. Default: **PasswordAuthenticator**
  - `CASSANDRA_USER`: Cassandra user name. Defaults: **cassandra**
  - `CASSANDRA_PASSWORD_SEEDER`: Password seeder will change the Cassandra default credentials at initialization. In clusters, only one node should be marked as password seeder. Default: **no**
  - `CASSANDRA_PASSWORD`: Cassandra user password. Default: **cassandra**
