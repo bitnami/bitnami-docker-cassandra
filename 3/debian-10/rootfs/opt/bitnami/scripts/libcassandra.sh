@@ -90,6 +90,11 @@ export CASSANDRA_INIT_SLEEP_TIME="${CASSANDRA_INIT_SLEEP_TIME:-5}"
 export CASSANDRA_PEER_CQL_MAX_RETRIES="${CASSANDRA_PEER_CQL_MAX_RETRIES:-100}"
 export CASSANDRA_PEER_CQL_SLEEP_TIME="${CASSANDRA_PEER_CQL_SLEEP_TIME:-10}"
 
+# Authentication & Authorization
+export CASSANDRA_ALLOW_EMPTY_PASSWORD="${CASSANDRA_ALLOW_EMPTY_PASSWORD:-false}"
+export CASSANDRA_AUTHORIZER="${CASSANDRA_AUTHORIZER:-CassandraAuthorizer}"
+export CASSANDRA_AUTHENTICATOR="${CASSANDRA_AUTHENTICATOR:-PasswordAuthenticator}"
+
 # Credentials
 export CASSANDRA_USER="${CASSANDRA_USER:-cassandra}"
 export CASSANDRA_KEYSTORE_LOCATION="${CASSANDRA_KEYSTORE_LOCATION:-${CASSANDRA_VOLUME_DIR}/secrets/keystore}"
@@ -416,8 +421,13 @@ cassandra_setup_data_dirs() {
 #########################
 cassandra_enable_auth() {
     if ! cassandra_is_file_external "cassandra.yaml"; then
-        cassandra_yaml_set "authenticator" "PasswordAuthenticator"
-        cassandra_yaml_set "authorizer" "CassandraAuthorizer"
+        if [[ "$CASSANDRA_ALLOW_EMPTY_PASSWORD" = "true" ]]; then
+            cassandra_yaml_set "authenticator" "AllowAllAuthenticator"
+            cassandra_yaml_set "authorizer" "AllowAllAuthorizer"
+        else
+            cassandra_yaml_set "authenticator" "${CASSANDRA_AUTHENTICATOR}"
+            cassandra_yaml_set "authorizer" "${CASSANDRA_AUTHORIZER}"
+        fi
     else
         debug "cassandra.yaml mounted. Skipping authentication method configuration"
     fi
