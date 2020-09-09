@@ -270,6 +270,25 @@ cassandra:
     - CASSANDRA_PASSWORD=password123
 ```
 
+## Allowing empty passwords
+
+By default the Cassandra image expects all the available passwords to be set. In order to allow empty passwords, it is necessary to set the `ALLOW_EMPTY_PASSWORD=yes` env variable. This env variable is only recommended for testing or development purposes. We strongly recommend specifying the `CASSANDRA_PASSWORD` for any other scenario.
+
+```console
+$ docker run --name cassandra -e ALLOW_EMPTY_PASSWORD=yes bitnami/cassandra:latest
+```
+
+Alternatively, modify the [`docker-compose.yml`](https://github.com/bitnami/bitnami-docker-cassandra/blob/master/docker-compose.yml) file present in this repository:
+
+```yaml
+services:
+  cassandra:
+  ...
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+  ...
+```
+
 ## Setting up a cluster
 
 A cluster can easily be setup with the Bitnami Cassandra Docker Image. **In case you do not mount custom configuration files**, you can use the following environment variables:

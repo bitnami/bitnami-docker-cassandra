@@ -91,7 +91,7 @@ export CASSANDRA_PEER_CQL_MAX_RETRIES="${CASSANDRA_PEER_CQL_MAX_RETRIES:-100}"
 export CASSANDRA_PEER_CQL_SLEEP_TIME="${CASSANDRA_PEER_CQL_SLEEP_TIME:-10}"
 
 # Authentication & Authorization
-export CASSANDRA_ALLOW_EMPTY_PASSWORD="${CASSANDRA_ALLOW_EMPTY_PASSWORD:-false}"
+export ALLOW_EMPTY_PASSWORD="${ALLOW_EMPTY_PASSWORD:-no}"
 export CASSANDRA_AUTHORIZER="${CASSANDRA_AUTHORIZER:-CassandraAuthorizer}"
 export CASSANDRA_AUTHENTICATOR="${CASSANDRA_AUTHENTICATOR:-PasswordAuthenticator}"
 
@@ -116,7 +116,7 @@ export CASSANDRA_PASSWORD="$(< "${CASSANDRA_PASSWORD_FILE}")"
 EOF
     else
         cat <<"EOF"
-export CASSANDRA_PASSWORD="${CASSANDRA_PASSWORD:-cassandra}"
+export CASSANDRA_PASSWORD="${CASSANDRA_PASSWORD:-}"
 EOF
     fi
     if [[ -n "${CASSANDRA_KEYSTORE_PASSWORD_FILE:-}" ]] && [[ -f "$CASSANDRA_KEYSTORE_PASSWORD_FILE" ]]; then
@@ -212,6 +212,14 @@ cassandra_validate() {
         error_code=1
     }
 
+    empty_password_enabled_warn() {
+        warn "You set the environment variable ALLOW_EMPTY_PASSWORD=${ALLOW_EMPTY_PASSWORD}. For safety reasons, do not use this flag in a production environment."
+    }
+
+    empty_password_error() {
+        print_validation_error "The $1 environment variable is empty or not set. Set the environment variable ALLOW_EMPTY_PASSWORD=yes to allow the container to be started with blank passwords. This is recommended only for development."
+    }
+
     check_default_password() {
         if [[ "${!1}" = "cassandra" ]]; then
             warn "You set the environment variable $1=cassandra. This is the default value when bootstrapping Cassandra and should not be used in production environments."
@@ -277,12 +285,19 @@ cassandra_validate() {
     check_password_file CASSANDRA_TRUSTSTORE_PASSWORD_FILE
     check_password_file CASSANDRA_KEYSTORE_PASSWORD_FILE
 
-    check_empty_value CASSANDRA_PASSWORD
     check_empty_value CASSANDRA_RACK
     check_empty_value CASSANDRA_DATACENTER
 
-    check_default_password CASSANDRA_PASSWORD
+    if [[ -z $CASSANDRA_PASSWORD ]]; then
+        if ! is_boolean_yes "$ALLOW_EMPTY_PASSWORD"; then
+            export CASSANDRA_PASSWORD="cassandra"
+        else
+            empty_password_enabled_warn
+        fi
+    fi
 
+    check_default_password CASSANDRA_PASSWORD
+    
     if is_boolean_yes "$CASSANDRA_CLIENT_ENCRYPTION" || is_boolean_yes "$CASSANDRA_INTERNODE_ENCRYPTION"; then
         check_empty_value CASSANDRA_KEYSTORE_PASSWORD
         check_empty_value CASSANDRA_TRUSTSTORE_PASSWORD
@@ -421,7 +436,7 @@ cassandra_setup_data_dirs() {
 #########################
 cassandra_enable_auth() {
     if ! cassandra_is_file_external "cassandra.yaml"; then
-        if [[ "$CASSANDRA_ALLOW_EMPTY_PASSWORD" = "true" ]]; then
+        if [[ "$ALLOW_EMPTY_PASSWORD" = "yes" ]] && [[ -z $CASSANDRA_PASSWORD ]]; then
             cassandra_yaml_set "authenticator" "AllowAllAuthenticator"
             cassandra_yaml_set "authorizer" "AllowAllAuthorizer"
         else
