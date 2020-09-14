@@ -216,6 +216,10 @@ cassandra_validate() {
         warn "You set the environment variable ALLOW_EMPTY_PASSWORD=${ALLOW_EMPTY_PASSWORD}. For safety reasons, do not use this flag in a production environment."
     }
 
+    empty_password_warn() {
+        warn "You've not provided a password. Default password \"cassandra\" will be used. For safety reasons, please provide a secure password in a production environment."
+    }
+
     empty_password_error() {
         print_validation_error "The $1 environment variable is empty or not set. Set the environment variable ALLOW_EMPTY_PASSWORD=yes to allow the container to be started with blank passwords. This is recommended only for development."
     }
@@ -290,6 +294,7 @@ cassandra_validate() {
 
     if [[ -z $CASSANDRA_PASSWORD ]]; then
         if ! is_boolean_yes "$ALLOW_EMPTY_PASSWORD"; then
+            empty_password_warn
             export CASSANDRA_PASSWORD="cassandra"
         else
             empty_password_enabled_warn
