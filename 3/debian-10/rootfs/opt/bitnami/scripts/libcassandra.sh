@@ -33,7 +33,7 @@ export CASSANDRA_BIN_DIR="${CASSANDRA_BASE_DIR}/bin"
 export CASSANDRA_CONF_DIR="${CASSANDRA_BASE_DIR}/conf"
 export CASSANDRA_VOLUME_DIR="${CASSANDRA_VOLUME_DIR:-/bitnami/cassandra}"
 export CASSANDRA_DATA_DIR="${CASSANDRA_DATA_DIR:-${CASSANDRA_VOLUME_DIR}/data}"
-export CASSANDRA_COMMIT_DIR="{CASSANDRA_COMMIT_DIR:--${CASSANDRA_VOLUME_DIR}/data/commitLog}"
+export CASSANDRA_COMMIT_DIR="{CASSANDRA_COMMIT_DIR:--${CASSANDRA_VOLUME_DIR}/data}"
 export CASSANDRA_DEFAULT_CONF_DIR="${CASSANDRA_BASE_DIR}/conf.default"
 export CASSANDRA_HISTORY_DIR="/.cassandra"
 export CASSANDRA_INITSCRIPTS_DIR=/docker-entrypoint-initdb.d
@@ -73,6 +73,7 @@ export CASSANDRA_SEEDS="${CASSANDRA_SEEDS:-$CASSANDRA_HOST}"
 export CASSANDRA_PEERS="${CASSANDRA_PEERS:-$CASSANDRA_SEEDS}"
 export CASSANDRA_RACK="${CASSANDRA_RACK:-rack1}"
 export CASSANDRA_BROADCAST_ADDRESS="${CASSANDRA_BROADCAST_ADDRESS:-}"
+export CASSANDRA_DYNAMIC_SNITCH="${CASSANDRA_DYNAMIC_SNITCH:true}"
 
 # Startup CQL and init-db settings
 export CASSANDRA_STARTUP_CQL="${CASSANDRA_STARTUP_CQL:-}"
@@ -422,7 +423,7 @@ cassandra_setup_data_dirs() {
     if ! cassandra_is_file_external "cassandra.yaml"; then
         cassandra_yaml_set_as_array data_file_directories "${CASSANDRA_DATA_DIR}/data" $CASSANDRA_CONF_FILE
 
-        cassandra_yaml_set commitlog_directory "${CASSANDRA_DATA_DIR}/commitlog"
+        cassandra_yaml_set commitlog_directory "${CASSANDRA_COMMIT_DIR}/commitlog"
         cassandra_yaml_set hints_directory "${CASSANDRA_DATA_DIR}/hints"
         cassandra_yaml_set cdc_raw_directory "${CASSANDRA_DATA_DIR}/cdc_raw"
         cassandra_yaml_set saved_caches_directory "${CASSANDRA_DATA_DIR}/saved_caches"
@@ -501,6 +502,7 @@ cassandra_setup_cluster() {
         cassandra_yaml_set "rpc_address" "$rpc_address"
         cassandra_yaml_set "broadcast_rpc_address" "$host"
         cassandra_yaml_set "endpoint_snitch" "$CASSANDRA_ENDPOINT_SNITCH"
+        cassandra_yaml_set "dynamic_snitch" "$CASSANDRA_DYNAMIC_SNITCH"
         cassandra_yaml_set "internode_encryption" "$CASSANDRA_INTERNODE_ENCRYPTION"
         cassandra_yaml_set "keystore" "$CASSANDRA_KEYSTORE_LOCATION"
         cassandra_yaml_set "keystore_password" "$CASSANDRA_KEYSTORE_PASSWORD"
