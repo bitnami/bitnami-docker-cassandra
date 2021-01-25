@@ -201,6 +201,7 @@ cassandra:
  - `CASSANDRA_RACK`: Rack name for the cluster. Ignored in **SimpleSnitch** endpoint snitch. Default: **rack1**.
  - `CASSANDRA_ENABLE_USER_DEFINED_FUNCTIONS`: User defined functions. Default: **false**.
  - `CASSANDRA_BROADCAST_ADDRESS`: The public IP address this node uses to broadcast to other nodes outside the network or across regions in multiple-region EC2 deployments. This option is commented out by default (if not provided, Cassandra will use "listen_address"). No defaults.
+ - `CASSANDRA_DYNAMIC_SNITCH`: Dynamic snitching property that enables Cassandra to identify most performance nodes to answer a query.  If left empty, this will be enabled (true).  If set to false, this will be disabled.  Default: **true**.
 
 ## Configuration file
 
