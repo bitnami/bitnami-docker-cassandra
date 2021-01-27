@@ -73,7 +73,7 @@ export CASSANDRA_SEEDS="${CASSANDRA_SEEDS:-$CASSANDRA_HOST}"
 export CASSANDRA_PEERS="${CASSANDRA_PEERS:-$CASSANDRA_SEEDS}"
 export CASSANDRA_RACK="${CASSANDRA_RACK:-rack1}"
 export CASSANDRA_BROADCAST_ADDRESS="${CASSANDRA_BROADCAST_ADDRESS:-}"
-export CASSANDRA_DYNAMIC_SNITCH="${CASSANDRA_DYNAMIC_SNITCH:-true}"
+
 
 # Startup CQL and init-db settings
 export CASSANDRA_STARTUP_CQL="${CASSANDRA_STARTUP_CQL:-}"
@@ -316,7 +316,6 @@ cassandra_validate() {
     check_true_false_value CASSANDRA_ENABLE_REMOTE_CONNECTIONS
     check_true_false_value CASSANDRA_CLIENT_ENCRYPTION
     check_true_false_value CASSANDRA_ENABLE_USER_DEFINED_FUNCTIONS
-    check_true_false_value CASSANDRA_DYNAMIC_SNITCH
     check_positive_value CASSANDRA_NUM_TOKENS
     check_positive_value CASSANDRA_INIT_MAX_RETRIES
     check_positive_value CASSANDRA_CQL_MAX_RETRIES
@@ -503,7 +502,6 @@ cassandra_setup_cluster() {
         cassandra_yaml_set "rpc_address" "$rpc_address"
         cassandra_yaml_set "broadcast_rpc_address" "$host"
         cassandra_yaml_set "endpoint_snitch" "$CASSANDRA_ENDPOINT_SNITCH"
-        cassandra_yaml_set "dynamic_snitch" "$CASSANDRA_DYNAMIC_SNITCH"
         cassandra_yaml_set "internode_encryption" "$CASSANDRA_INTERNODE_ENCRYPTION"
         cassandra_yaml_set "keystore" "$CASSANDRA_KEYSTORE_LOCATION"
         cassandra_yaml_set "keystore_password" "$CASSANDRA_KEYSTORE_PASSWORD"
