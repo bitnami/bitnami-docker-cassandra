@@ -209,6 +209,22 @@ Additionally, any environment variable beginning with the following prefix will 
 - `CASSANDRA_CFG_RACKDC_`: Will add the corresponding key and the provided value to `cassandra-rackdc.properties`.
 - `CASSANDRA_CFG_COMMITLOG_`: Will add the corresponding key and the provided value to `commitlog_archiving.properties`.
 
+For example, use `CASSANDRA_CFG_RACKDC_PREFER_LOCAL` in order to configure `prefer_local` in `cassandra-rackdc.properties`:
+
+```console
+$ docker run --name cassandra -e CASSANDRA_CFG_RACKDC_PREFER_LOCAL=true bitnami/cassandra:latest
+```
+
+or modifying the `docker-compose.yaml` with:
+
+```
+cassandra:
+  ...
+  environment:
+    - CASSANDRA_CFG_RACKDC_PREFER_LOCAL=true
+  ...
+```
+
 ## Configuration file
 
 The image looks for configurations in `/opt/bitnami/cassandra/conf/`. You can mount a volume at `/bitnami/cassandra/conf/` and copy/edit the configurations in the `/path/to/cassandra-persistence/conf/`. The default configurations will be populated to the `conf/` directory if it's empty.
