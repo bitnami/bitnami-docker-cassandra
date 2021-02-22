@@ -1174,6 +1174,7 @@ cassandra_commitlog_conf_set() {
 cassandra_setup_from_environment_variables() {
     # Map environment variables to config properties for cassandra-env.sh
     for var in "${!CASSANDRA_CFG_ENV_@}"; do
+        # shellcheck disable=SC2001
         key="$(echo "$var" | sed -e 's/^CASSANDRA_CFG_ENV_//g')"
         value="${!var}"
         cassandra_env_conf_set "$key" "$value"
