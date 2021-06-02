@@ -311,8 +311,8 @@ Cassandra is a resource-intensive application. Depending on the target system, t
 - `CASSANDRA_CQL_SLEEP_TIME`: Sleep time (in seconds) between retries for checking that the Cassandra client can access the database in localhost. Default: **5**.
 - `CASSANDRA_PEER_CQL_MAX_RETRIES`: Maximum retries for checking that the Cassandra client can access the database located in a peer host. This is used for ensuring that all of the peers are initialized before changing the database credentials. Default: **100**.
 - `CASSANDRA_PEER_CQL_SLEEP_TIME`: Sleep time (in seconds) between retries for checking that the Cassandra client can access the database in a peer host. Default: **5**.
-- `CASSANDRA_AUTHENTICATOR`: Set cassandra authenticator Default: **if ALLOW_EMPTY_PASSWORD=yes and CASSANDRA_PASSWORD not set : PasswordAuthenticator else AllowAllAuthenticator**.
-- `CASSANDRA_AUTHORIZER`: Set cassandra authorizer Default: **if ALLOW_EMPTY_PASSWORD=yes and CASSANDRA_PASSWORD not set : CassandraAuthorizer else AllowAllAuthorizer**.
+- `CASSANDRA_AUTHENTICATOR`: Set cassandra authenticator Default: **if ALLOW_EMPTY_PASSWORD=yes and CASSANDRA_PASSWORD not set : AllAllAuthenticator else PasswordAuthenticator**.
+- `CASSANDRA_AUTHORIZER`: Set cassandra authorizer Default: **if ALLOW_EMPTY_PASSWORD=yes and CASSANDRA_PASSWORD not set  AllowAllAuthorizer :  else CassandraAuthorizer**.
 
 
 ### Step 1: Create a new network.
